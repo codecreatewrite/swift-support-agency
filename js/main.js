@@ -210,6 +210,24 @@ function initFAQ() {
   });
 }
 
+// ---- Theme Toggle ----
+function initTheme() {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  btn.querySelector('i').className = saved === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+
+  btn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    btn.querySelector('i').className = next === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+  });
+}
+
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
   renderServices();
@@ -218,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBurger();
   initActiveNav();
   initFAQ();
-
+  initTheme();
   // Slight delay so dynamically rendered cards get picked up
   setTimeout(initReveal, 120);
 });

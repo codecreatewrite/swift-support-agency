@@ -4,7 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Swift Support Agency — Dedicated support teams for prop firms and trading platforms. Live chat, Discord management, affiliate coordination and more." />
-  <title>Swift Support Agency</title>
+  <meta name="keywords" content="prop firm support, trading platform support, Discord management, affiliate management, virtual assistant, community management" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Swift Support Agency" />
+  <meta property="og:description" content="Dedicated support teams for prop firms and trading platforms." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://swiftsupportagency.netlify.app" />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Swift Support Agency" />
+  <meta name="twitter:description" content="Dedicated support teams for prop firms and trading platforms." />
+  <title>Swift Support Agency | Support Teams for Prop Firms & Trading Platforms</title>
+  
+  <!-- Structured Data for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Swift Support Agency",
+    "description": "Dedicated support teams for prop firms and trading platforms.",
+    "url": "https://swiftsupportagency.netlify.app",
+    "email": "CEO@swiftsupportagency.com",
+    "sameAs": ["https://instagram.com/swift_support_agency"],
+    "serviceType": ["Customer Support", "Discord Management", "Affiliate Management", "Virtual Assistant"],
+    "areaServed": "Worldwide"
+  }
+  </script>
+
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,6 +55,9 @@
         <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
       <a href="#contact" class="btn btn-primary navbar__cta">Book a Consultation</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
       <button class="navbar__burger" id="burgerBtn" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -60,50 +89,85 @@
           </div>
           <div class="dashboard__stats">
             <div class="dashboard__stat">
-              <span class="dashboard__stat-val">1.8<small>min</small></span>
-              <span class="dashboard__stat-label">Avg. Response Time</span>
+              <span class="dashboard__stat-val"><i class="fas fa-circle" style="color:#28c840;font-size:0.6rem;vertical-align:middle;"></i> 3</span>
+              <span class="dashboard__stat-label">Agents Online</span>
             </div>
             <div class="dashboard__stat">
-              <span class="dashboard__stat-val">47</span>
-              <span class="dashboard__stat-label">Tickets Resolved Today</span>
+              <span class="dashboard__stat-val">12</span>
+              <span class="dashboard__stat-label">Open Tickets</span>
             </div>
             <div class="dashboard__stat">
-              <span class="dashboard__stat-val">98<small>%</small></span>
-              <span class="dashboard__stat-label">Satisfaction Rate</span>
+              <span class="dashboard__stat-val">24</span>
+              <span class="dashboard__stat-label">Active Chats</span>
             </div>
           </div>
           <div class="dashboard__tickets">
-            <div class="dashboard__ticket">
-              <div class="ticket__status resolved"></div>
-              <div class="ticket__info">
-                <span class="ticket__name">Withdrawal query</span>
-                <span class="ticket__time">2m ago</span>
+            <div class="dashboard__tickets-track">
+              <div class="dashboard__ticket">
+                <div class="ticket__status resolved"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">Withdrawal query</span>
+                  <span class="ticket__time">2m ago</span>
+                </div>
+                <span class="ticket__badge resolved">Resolved</span>
               </div>
-              <span class="ticket__badge resolved">Resolved</span>
-            </div>
-            <div class="dashboard__ticket">
-              <div class="ticket__status active"></div>
-              <div class="ticket__info">
-                <span class="ticket__name">Account verification</span>
-                <span class="ticket__time">5m ago</span>
+              <div class="dashboard__ticket">
+                <div class="ticket__status active"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">Account verification</span>
+                  <span class="ticket__time">5m ago</span>
+                </div>
+                <span class="ticket__badge active">Active</span>
               </div>
-              <span class="ticket__badge active">Active</span>
-            </div>
-            <div class="dashboard__ticket">
-              <div class="ticket__status resolved"></div>
-              <div class="ticket__info">
-                <span class="ticket__name">KYC documentation</span>
-                <span class="ticket__time">11m ago</span>
+              <div class="dashboard__ticket">
+                <div class="ticket__status resolved"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">KYC documentation</span>
+                  <span class="ticket__time">11m ago</span>
+                </div>
+                <span class="ticket__badge resolved">Resolved</span>
               </div>
-              <span class="ticket__badge resolved">Resolved</span>
-            </div>
-            <div class="dashboard__ticket">
-              <div class="ticket__status active"></div>
-              <div class="ticket__info">
-                <span class="ticket__name">Platform access issue</span>
-                <span class="ticket__time">18m ago</span>
+              <div class="dashboard__ticket">
+                <div class="ticket__status active"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">Platform access issue</span>
+                  <span class="ticket__time">18m ago</span>
+                </div>
+                <span class="ticket__badge active">Active</span>
               </div>
-              <span class="ticket__badge active">Active</span>
+              <!-- Duplicate for seamless loop -->
+              <div class="dashboard__ticket">
+                <div class="ticket__status resolved"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">Withdrawal query</span>
+                  <span class="ticket__time">2m ago</span>
+                </div>
+                <span class="ticket__badge resolved">Resolved</span>
+              </div>
+              <div class="dashboard__ticket">
+                <div class="ticket__status active"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">Account verification</span>
+                  <span class="ticket__time">5m ago</span>
+                </div>
+                <span class="ticket__badge active">Active</span>
+              </div>
+              <div class="dashboard__ticket">
+                <div class="ticket__status resolved"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">KYC documentation</span>
+                  <span class="ticket__time">11m ago</span>
+                </div>
+                <span class="ticket__badge resolved">Resolved</span>
+              </div>
+              <div class="dashboard__ticket">
+                <div class="ticket__status active"></div>
+                <div class="ticket__info">
+                  <span class="ticket__name">Platform access issue</span>
+                  <span class="ticket__time">18m ago</span>
+                </div>
+                <span class="ticket__badge active">Active</span>
+              </div>
             </div>
           </div>
           <div class="dashboard__footer">
@@ -120,12 +184,21 @@
     <div class="container trust-strip__inner">
       <span class="trust-strip__label">Operational across</span>
       <div class="trust-strip__items">
-        <div class="trust-item"><i class="fab fa-discord"></i> Discord</div>
-        <div class="trust-item"><i class="fab fa-telegram"></i> Telegram</div>
-        <div class="trust-item"><i class="fab fa-whatsapp"></i> WhatsApp</div>
-        <div class="trust-item"><i class="fas fa-headset"></i> Intercom</div>
-        <div class="trust-item"><i class="fas fa-chart-bar"></i> CRM Systems</div>
-        <div class="trust-item"><i class="fab fa-slack"></i> Slack</div>
+        <div class="trust-strip__track">
+          <div class="trust-item"><i class="fab fa-discord"></i> Discord</div>
+          <div class="trust-item"><i class="fab fa-telegram"></i> Telegram</div>
+          <div class="trust-item"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+          <div class="trust-item"><i class="fas fa-headset"></i> Intercom</div>
+          <div class="trust-item"><i class="fas fa-chart-bar"></i> CRM Systems</div>
+          <div class="trust-item"><i class="fab fa-slack"></i> Slack</div>
+          <!-- Duplicate for seamless loop -->
+          <div class="trust-item"><i class="fab fa-discord"></i> Discord</div>
+          <div class="trust-item"><i class="fab fa-telegram"></i> Telegram</div>
+          <div class="trust-item"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+          <div class="trust-item"><i class="fas fa-headset"></i> Intercom</div>
+          <div class="trust-item"><i class="fas fa-chart-bar"></i> CRM Systems</div>
+          <div class="trust-item"><i class="fab fa-slack"></i> Slack</div>
+        </div>
       </div>
     </div>
   </div>
