@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Swift Support Agency</title>
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy:    #071428;
+      --mid:     #0a1f3d;
+      --blue:    #2979ff;
+      --gold:    #e8a020;
+      --surface: rgba(41,121,255,0.06);
+      --border:  rgba(41,121,255,0.2);
+      --text:    #f0f6ff;
+      --muted:   rgba(200,220,255,0.55);
+      --radius:  12px;
+      --red:     #ff4d4d;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050d1f;
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- LOGIN ---- */
+    .login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login__box {
+      background: var(--mid);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login__box img {
+      width: 64px;
+      margin: 0 auto 20px;
+    }
+
+    .login__box h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .login__box p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .login__error {
+      background: rgba(255,77,77,0.1);
+      border: 1px solid rgba(255,77,77,0.3);
+      color: var(--red);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* ---- FORM ELEMENTS ---- */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: rgba(41,121,255,0.07);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.25s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--blue);
+    }
+
+    textarea { resize: vertical; min-height: 90px; }
+
+    select option { background: #0a1f3d; }
+
+    /* ---- BUTTONS ---- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+
+    .btn-primary { background: var(--blue); color: #fff; width: 100%; }
+    .btn-primary:hover { background: #5393ff; transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: #050d1f; }
+    .btn-gold:hover { background: #f5b740; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-danger {
+      background: rgba(255,77,77,0.1);
+      color: var(--red);
+      border: 1px solid rgba(255,77,77,0.25);
+    }
+    .btn-danger:hover { background: rgba(255,77,77,0.2); }
+    .btn-sm { padding: 7px 16px; font-size: 0.82rem; }
+
+    /* ---- DASHBOARD ---- */
+    .dashboard { display: none; min-height: 100vh; }
+
+    .topbar {
+      background: rgba(5,13,31,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .topbar__brand img { width: 32px; }
+    .topbar__brand span { color: var(--gold); }
+
+    .topbar__actions { display: flex; gap: 10px; align-items: center; }
+
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .page-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    /* ---- ADD AGENT FORM ---- */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+
+    .form-card__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    .form-card__title i { color: var(--blue); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-grid .field-full { grid-column: 1 / -1; }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* ---- PHOTO PREVIEW ---- */
+    .photo-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      display: none;
+      margin-top: 10px;
+    }
+
+    /* ---- AGENTS LIST ---- */
+    .agents-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .agents-header h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.25s;
+    }
+
+    .agent-card:hover { border-color: var(--blue); }
+
+    .agent-card__top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .agent-card__photo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .agent-card__placeholder {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(41,121,255,0.1);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .agent-card__name {
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .agent-card__role {
+      font-size: 0.75rem;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .agent-card__bio {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .agent-card__actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* ---- EMPTY STATE ---- */
+    .empty {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+
+    .empty i { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .empty p { font-size: 0.9rem; }
+
+    /* ---- TOAST ---- */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--mid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.35s ease;
+      z-index: 999;
+      max-width: 320px;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: rgba(40,200,64,0.4); }
+    .toast.success i { color: #28c840; }
+    .toast.error { border-color: rgba(255,77,77,0.4); }
+    .toast.error i { color: var(--red); }
+
+    /* ---- LOADING ---- */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-card { padding: 20px; }
+      .login__box { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== LOGIN ===== -->
+  <div class="login" id="loginPage">
+    <div class="login__box">
+      <img src="assets/logo.png" alt="Swift Support Agency" />
+      <h1>Admin Panel</h1>
+      <p>Swift Support Agency — Agent Management</p>
+      <div class="login__error" id="loginError">
+        <i class="fas fa-exclamation-circle"></i> Incorrect password
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter admin password" />
+      </div>
+      <button class="btn btn-primary" id="loginBtn" onclick="login()">
+        <span>Sign In</span>
+        <div class="spinner" id="loginSpinner"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="dashboard" id="dashboard">
+
+    <div class="topbar">
+      <div class="topbar__inner">
+        <div class="topbar__brand">
+          <img src="assets/logo.png" alt="" />
+          Swift <span>Support</span> &nbsp;— Admin
+        </div>
+        <div class="topbar__actions">
+          <a href="/" class="btn btn-outline btn-sm">
+            <i class="fas fa-arrow-left"></i> View Site
+          </a>
+          <button class="btn btn-outline btn-sm" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="page-title">Agent Management</div>
+      <div class="page-sub">Add, edit, or remove agent profiles displayed on the website.</div>
+
+      <!-- Add / Edit Form -->
+      <div class="form-card">
+        <div class="form-card__title">
+          <i class="fas fa-user-plus"></i>
+          <span id="formTitle">Add New Agent</span>
+        </div>
+
+        <input type="hidden" id="agentId" />
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Full Name *</label>
+            <input type="text" id="agentName" placeholder="e.g. Sarah Johnson" />
+          </div>
+          <div class="field">
+            <label>Role / Title *</label>
+            <input type="text" id="agentRole" placeholder="e.g. Discord Manager" />
+          </div>
+          <div class="field field-full">
+            <label>Bio</label>
+            <textarea id="agentBio" placeholder="Short description about this agent..."></textarea>
+          </div>
+          <div class="field field-full">
+            <label>Profile Photo</label>
+            <input type="file" id="agentPhoto" accept="image/*" onchange="previewPhoto()" />
+            <img id="photoPreview" class="photo-preview" alt="Preview" />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-gold" onclick="saveAgent()">
+            <i class="fas fa-save"></i>
+            <span id="saveLabel">Save Agent</span>
+            <div class="spinner" id="saveSpinner"></div>
+          </button>
+          <button class="btn btn-outline" onclick="resetForm()" id="cancelBtn" style="display:none;">
+            Cancel Edit
+          </button>
+        </div>
+      </div>
+
+      <!-- Agents List -->
+      <div class="agents-header">
+        <h2>Current Agents <span id="agentCount" style="color:rgba(200,220,255,0.4);font-weight:400;font-size:0.9rem;"></span></h2>
+        <button class="btn btn-outline btn-sm" onclick="loadAgents()">
+          <i class="fas fa-sync"></i> Refresh
+        </button>
+      </div>
+
+      <div class="agents-grid" id="agentsGrid">
+        <div class="empty">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading agents...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
