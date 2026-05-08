@@ -12,11 +12,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ------------------------------------------------   
-   CSS VARIABLES
------------------------------------------------- */   
-:root {
-  /* Brand Colors */                                  
+/* ------------------------------------------------
+   CSS VARIABLES                                      
+------------------------------------------------ */
+:root {                                               
+  /* Brand Colors */
   --navy-deep:    #080f1e;
   --navy:         #0d1a2d;
   --navy-mid:     #112240;
@@ -659,7 +659,7 @@ section { padding: var(--section-pad) 0; }
 
 @media (max-width: 480px) {
   .hero { padding-top: 96px; }
-  .dashboard__stats { grid-template-columns: repeat(3,1fr); }
+  .dashboard__stats { grid-template-columns: repeat(3, 1fr); }
   .dashboard__stat-val { font-size: 1.2rem; }
 }
 
@@ -1512,3 +1512,10 @@ section { padding: var(--section-pad) 0; }
     gap: 24px;
   }
 }
+
+/* ------------------------------------------------
+   INLINE STYLE REPLACEMENTS
+------------------------------------------------ */
+.why__cta       { margin-top: 60px; }
+.contact__btn   { margin-top: 20px; }
+.agents__cta    { margin-top: 8px; }
