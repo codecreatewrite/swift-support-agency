@@ -1456,3 +1456,59 @@ section { padding: var(--section-pad) 0; }
   border-color: var(--border-gold);
   background: var(--surface-3);
 }
+
+/* ------------------------------------------------
+   OUTCOMES STRIP
+------------------------------------------------ */
+.outcomes {
+  background: linear-gradient(135deg, rgba(41, 121, 255, 0.06) 0%, rgba(232, 160, 32, 0.04) 100%);
+  border-top: 1px solid var(--border-blue);
+  border-bottom: 1px solid var(--border);
+  padding: 64px 0;
+}
+
+.outcomes__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.outcomes__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.outcomes__item i {
+  font-size: 1.3rem;
+  color: var(--blue-bright);
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.outcomes__item strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.outcomes__item p {
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 860px) {
+  .outcomes__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .outcomes__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
