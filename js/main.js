@@ -76,10 +76,11 @@ async function renderAgents() {
 
     grid.innerHTML = agents.map(a => `
       <div class="agent-card reveal">
-        ${a.photo
-          ? `<img src="${a.photo}" alt="${a.name}" class="agent-card__photo" />`
+        ${a.photo_url
+          ? `<img src="${a.photo_url}" alt="${a.name}" class="agent-card__photo" />`
           : `<div class="agent-card__placeholder"><i class="fas fa-user"></i></div>`
         }
+
         <h3>${a.name}</h3>
         <div class="agent-card__role">${a.role}</div>
         <p>${a.bio || ''}</p>

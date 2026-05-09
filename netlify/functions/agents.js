@@ -77,7 +77,7 @@ exports.handler = async (event) => {
 
     // SAVE agent (add or update)
     if (body.action === 'save') {
-      const { id, name, role, bio, photo } = body.agent;
+      const { id, name, role, bio, photo_url } = body.agent;
 
       if (!name || !role) {
         return {
@@ -94,14 +94,14 @@ exports.handler = async (event) => {
         res = await supabase(
           'PATCH',
           `agents?id=eq.${id}`,
-          { name, role, bio: bio || '', photo: photo || '' }
+          { name, role, bio: bio || '', photo_url: photo_url || '' }
         );
       } else {
         // Insert new
         res = await supabase(
           'POST',
           'agents',
-          { name, role, bio: bio || '', photo: photo || '' }
+          { name, role, bio: bio || '', photo_url: photo_url || '' }
         );
       }
 

@@ -5,7 +5,9 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
 function getAgents() {
   return new Promise((resolve, reject) => {
-    const url = new URL(`${SUPABASE_URL}/rest/v1/agents?select=*&order=created_at.asc`);
+    const url = new URL(
+      `${SUPABASE_URL}/rest/v1/agents?select=id,name,role,bio,photo_url&order=created_at.asc`
+    );
 
     const options = {
       hostname: url.hostname,

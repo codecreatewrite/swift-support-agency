@@ -470,8 +470,9 @@
             <textarea id="agentBio" placeholder="Short description about this agent..."></textarea>
           </div>
           <div class="field field-full">
-            <label>Profile Photo</label>
-            <input type="file" id="agentPhoto" accept="image/*" onchange="previewPhoto()" />
+            <label>Profile Photo URL</label>
+            <input type="url" id="agentPhoto" placeholder="https://i.ibb.co/your-image-url.jpg" oninput="previewPhoto()" />
+            <small style="color:rgba(200,220,255,0.4);font-size:0.8rem;margin-top:4px;">Upload photo to imgbb.com and paste the direct link here</small>
             <img id="photoPreview" class="photo-preview" alt="Preview" />
           </div>
         </div>

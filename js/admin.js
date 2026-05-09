@@ -1,5 +1,5 @@
 /* ================================================
-   SWIFT SUPPORT AGENCY — Admin Panel JS
+   SWIFT SUPPORT AGENCY — Admin Panel JS              
 ================================================ */
 
 let SESSION_PASSWORD = '';
@@ -100,8 +100,8 @@ function renderAgents(agents) {
   grid.innerHTML = agents.map(a => `
     <div class="agent-card">
       <div class="agent-card__top">
-        ${a.photo
-          ? `<img src="${a.photo}" class="agent-card__photo" alt="${a.name}" />`
+        ${a.photo_url
+          ? `<img src="${a.photo_url}" class="agent-card__photo" alt="${a.name}" />`
           : `<div class="agent-card__placeholder"><i class="fas fa-user"></i></div>`
         }
         <div>
@@ -122,18 +122,13 @@ function renderAgents(agents) {
   `).join('');
 }
 
-// ---- Photo Preview ----
+// ---- Photo Preview (URL based) ----
 function previewPhoto() {
-  const file = document.getElementById('agentPhoto').files[0];
+  const url = document.getElementById('agentPhoto').value.trim();
   const preview = document.getElementById('photoPreview');
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.src = e.target.result;
-    preview.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
+  if (!url) { preview.style.display = 'none'; return; }
+  preview.src = url;
+  preview.style.display = 'block';
 }
 
 // ---- Save Agent ----
@@ -153,20 +148,14 @@ async function saveAgent() {
   btn.disabled  = true;
   spinner.style.display = 'block';
 
-  // Handle photo
-  let photoData = '';
-  const file = document.getElementById('agentPhoto').files[0];
-  if (file) {
-    photoData = await toBase64(file);
-  } else {
-    // Keep existing photo if editing
-    if (id) {
-      const existing = currentAgents.find(a => a.id === id);
-      if (existing) photoData = existing.photo || '';
-    }
+  // Handle photo URL
+  let photoUrl = document.getElementById('agentPhoto').value.trim();
+  if (!photoUrl && id) {
+    const existing = currentAgents.find(a => a.id === id);
+    if (existing) photoUrl = existing.photo_url || '';
   }
 
-  const agent = { name, role, bio, photo: photoData };
+  const agent = { name, role, bio, photo_url: photoUrl };
   if (id) agent.id = id;
 
   try {
@@ -208,11 +197,14 @@ function editAgent(id) {
   document.getElementById('agentName').value = agent.name;
   document.getElementById('agentRole').value = agent.role;
   document.getElementById('agentBio').value  = agent.bio || '';
+  document.getElementById('agentPhoto').value = agent.photo_url || '';
 
-  if (agent.photo) {
+  if (agent.photo_url) {
     const preview = document.getElementById('photoPreview');
-    preview.src = agent.photo;
+    preview.src = agent.photo_url;
     preview.style.display = 'block';
+  } else {
+    document.getElementById('photoPreview').style.display = 'none';
   }
 
   document.getElementById('formTitle').textContent = 'Edit Agent';
@@ -269,16 +261,7 @@ function resetForm() {
   document.getElementById('cancelBtn').style.display = 'none';
 }
 
-// ---- Helpers ----
-function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
+// ---- Show Toast ----
 function showToast(msg, type = 'success') {
   const toast = document.getElementById('toast');
   const icon  = toast.querySelector('i');
