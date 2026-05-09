@@ -58,7 +58,11 @@ async function renderAgents() {
   if (!grid) return;
 
   try {
-    const res = await fetch('data/agents.json');
+    const res = await fetch('/.netlify/functions/agents', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: 'ssa-v1', action: 'get' })
+    });
     const agents = await res.json();
 
     if (!agents || agents.length === 0) {

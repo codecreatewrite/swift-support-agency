@@ -1,5 +1,43 @@
-const fs = require('fs');
-const path = require('path');
+const https = require('https');
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+// Simple fetch wrapper using Node https
+function supabase(method, path, body) {
+  return new Promise((resolve, reject) => {
+    const url = new URL(`${SUPABASE_URL}/rest/v1/${path}`);
+    const data = body ? JSON.stringify(body) : null;
+
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method,
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      }
+    };
+
+    if (data) options.headers['Content-Length'] = Buffer.byteLength(data);
+
+    const req = https.request(options, res => {
+      let raw = '';
+      res.on('data', chunk => raw += chunk);
+      res.on('end', () => {
+        try { resolve({ status: res.statusCode, data: JSON.parse(raw || '[]') }); }
+        catch { resolve({ status: res.statusCode, data: [] }); }
+      });
+    });
+
+    req.on('error', reject);
+    if (data) req.write(data);
+    req.end();
+  });
+}
 
 exports.handler = async (event) => {
   const headers = {
@@ -13,8 +51,8 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
 
-  const { ADMIN_PASSWORD } = process.env;
-  const body = JSON.parse(event.body || '{}');
+  let body = {};
+  try { body = JSON.parse(event.body || '{}'); } catch {}
 
   // Auth check
   if (body.password !== ADMIN_PASSWORD) {
@@ -25,70 +63,79 @@ exports.handler = async (event) => {
     };
   }
 
-  const agentsPath = path.join('/tmp', 'agents.json');
-
-  // Load existing agents from /tmp or fallback empty
-  let agents = [];
   try {
-    const raw = fs.readFileSync(agentsPath, 'utf8');
-    agents = JSON.parse(raw);
-  } catch {
-    agents = [];
-  }
 
-  // SAVE agent
-  if (body.action === 'save') {
-    const agent = body.agent;
-    if (!agent || !agent.name) {
+    // GET all agents
+    if (body.action === 'get') {
+      const res = await supabase('GET', 'agents?select=*&order=created_at.asc', null);
       return {
-        statusCode: 400,
+        statusCode: 200,
         headers,
-        body: JSON.stringify({ error: 'Invalid agent data' })
+        body: JSON.stringify(res.data)
       };
     }
 
-    if (agent.id) {
-      // Update existing
-      const idx = agents.findIndex(a => a.id === agent.id);
-      if (idx !== -1) agents[idx] = agent;
-      else agents.push(agent);
-    } else {
-      // New agent
-      agent.id = Date.now().toString();
-      agents.push(agent);
+    // SAVE agent (add or update)
+    if (body.action === 'save') {
+      const { id, name, role, bio, photo } = body.agent;
+
+      if (!name || !role) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ error: 'Name and role required' })
+        };
+      }
+
+      let res;
+
+      if (id) {
+        // Update existing
+        res = await supabase(
+          'PATCH',
+          `agents?id=eq.${id}`,
+          { name, role, bio: bio || '', photo: photo || '' }
+        );
+      } else {
+        // Insert new
+        res = await supabase(
+          'POST',
+          'agents',
+          { name, role, bio: bio || '', photo: photo || '' }
+        );
+      }
+
+      // Fetch updated list
+      const all = await supabase('GET', 'agents?select=*&order=created_at.asc', null);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true, agents: all.data })
+      };
     }
 
-    fs.writeFileSync(agentsPath, JSON.stringify(agents, null, 2));
+    // DELETE agent
+    if (body.action === 'delete') {
+      await supabase('DELETE', `agents?id=eq.${body.id}`, null);
+      const all = await supabase('GET', 'agents?select=*&order=created_at.asc', null);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true, agents: all.data })
+      };
+    }
+
     return {
-      statusCode: 200,
+      statusCode: 400,
       headers,
-      body: JSON.stringify({ success: true, agents })
+      body: JSON.stringify({ error: 'Unknown action' })
+    };
+
+  } catch (err) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: err.message })
     };
   }
-
-  // DELETE agent
-  if (body.action === 'delete') {
-    agents = agents.filter(a => a.id !== body.id);
-    fs.writeFileSync(agentsPath, JSON.stringify(agents, null, 2));
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ success: true, agents })
-    };
-  }
-
-  // GET agents
-  if (event.httpMethod === 'GET' || body.action === 'get') {
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(agents)
-    };
-  }
-
-  return {
-    statusCode: 400,
-    headers,
-    body: JSON.stringify({ error: 'Unknown action' })
-  };
 };
