@@ -59,7 +59,8 @@ async function renderAgents() {
 
   try {
     const res = await fetch('/.netlify/functions/public-agents');
-        const agents = await res.json();
+    const agents = await res.json();
+    const agents = Array.isArray(data) ? data : [];
 
     if (!agents || agents.length === 0) {
       grid.innerHTML = `
