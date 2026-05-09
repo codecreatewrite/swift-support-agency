@@ -59,16 +59,16 @@ async function renderAgents() {
 
   try {
     const res = await fetch('/.netlify/functions/public-agents');
-    const agents = await res.json();
+    const data = await res.json();
     const agents = Array.isArray(data) ? data : [];
 
-    if (!agents || agents.length === 0) {
+    if (agents.length === 0) {
       grid.innerHTML = `
         <div class="agents__empty reveal">
           <i class="fas fa-user-tie"></i>
           <h3>Profiles Coming Soon</h3>
           <p>We're building our public talent directory. Reach out directly to discuss agent availability for your platform.</p>
-          <a href="#contact" class="btn btn-outline" style="margin-top: 8px;">Get In Touch</a>
+          <a href="#contact" class="btn btn-outline agents__cta">Get In Touch</a>
         </div>
       `;
       return;
@@ -82,17 +82,18 @@ async function renderAgents() {
         }
         <h3>${a.name}</h3>
         <div class="agent-card__role">${a.role}</div>
-        <p>${a.bio}</p>
+        <p>${a.bio || ''}</p>
       </div>
     `).join('');
 
-  } catch {
+  } catch (err) {
+    console.error('Agents load error:', err);
     grid.innerHTML = `
       <div class="agents__empty reveal">
         <i class="fas fa-user-tie"></i>
         <h3>Profiles Coming Soon</h3>
         <p>We're building our public talent directory. Reach out directly to discuss agent availability for your platform.</p>
-        <a href="#contact" class="btn btn-outline" style="margin-top: 8px;">Get In Touch</a>
+        <a href="#contact" class="btn btn-outline agents__cta">Get In Touch</a>
       </div>
     `;
   }
@@ -130,7 +131,6 @@ function initBurger() {
     });
   });
 
-  // Close on outside tap
   document.addEventListener('click', (e) => {
     if (!btn.contains(e.target) && !links.contains(e.target)) {
       btn.classList.remove('open');
@@ -195,14 +195,12 @@ function initFAQ() {
     btn.addEventListener('click', () => {
       const isOpen = item.classList.contains('open');
 
-      // Close all
       items.forEach(i => {
         i.classList.remove('open');
         const a = i.querySelector('.faq__answer');
         if (a) a.style.maxHeight = null;
       });
 
-      // Open clicked if it was closed
       if (!isOpen) {
         item.classList.add('open');
         answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -238,6 +236,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initActiveNav();
   initFAQ();
   initTheme();
-  // Slight delay so dynamically rendered cards get picked up
   setTimeout(initReveal, 120);
 });
