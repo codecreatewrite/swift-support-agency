@@ -64,7 +64,7 @@ async function renderAgents() {
 
     if (agents.length === 0) {
       grid.innerHTML = `
-        <div class="agents__empty reveal">
+        <div class="agents__empty">
           <i class="fas fa-user-tie"></i>
           <h3>Profiles Coming Soon</h3>
           <p>We're building our public talent directory. Reach out directly to discuss agent availability for your platform.</p>
@@ -75,7 +75,7 @@ async function renderAgents() {
     }
 
     grid.innerHTML = agents.map(a => `
-      <div class="agent-card reveal">
+      <div class="agent-card">
         ${a.photo_url
           ? `<img src="${a.photo_url}" alt="${a.name}" class="agent-card__photo" />`
           : `<div class="agent-card__placeholder"><i class="fas fa-user"></i></div>`
@@ -90,7 +90,7 @@ async function renderAgents() {
   } catch (err) {
     console.error('Agents load error:', err);
     grid.innerHTML = `
-      <div class="agents__empty reveal">
+      <div class="agents__empty">
         <i class="fas fa-user-tie"></i>
         <h3>Profiles Coming Soon</h3>
         <p>We're building our public talent directory. Reach out directly to discuss agent availability for your platform.</p>
